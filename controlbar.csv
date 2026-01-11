@@ -1,0 +1,2 @@
+정의된 명령어,adb 명령어
+Test,adb shell input tap 1200 2400
