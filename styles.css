@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    height: 1080px;
+    background-color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+}
+
+/* Header */
+.header {
+    width: 100%;
+    height: 70px;
+    background-color: #121212;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.site-title {
+    font-family: 'Jolly Lodger', cursive;
+    font-size: 36pt;
+    color: #ffffff;
+    font-weight: normal;
+}
+
+.header-nav {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-button {
+    font-family: 'Jolly Lodger', cursive;
+    font-size: 36pt;
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+
+.nav-button:hover {
+    color: #2a52be;
+}
+
+.nav-button.active {
+    color: #2a52be;
+}
+
+/* Main Content */
+.main-content {
+    width: 1920px;
+    height: 1010px; /* 1080 - 70 (header) */
+    background-color: #ffffff;
+    overflow-y: auto;
+}
+
+.content-section {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
+
+/* Control Section */
+.control-container {
+    width: 100%;
+    max-width: 1080px;
+    margin-left: 120px;
+}
+
+/* Control Bar */
+.control-bar {
+    width: 1080px;
+    height: 70px;
+    background-color: #121212;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.add-control-bar {
+    background-color: #F7F7F7;
+}
+
+.control-bar-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.defined-command {
+    font-family: 'Jolly Lodger', cursive;
+    font-size: 36pt;
+    color: #000000;
+    flex: 1;
+}
+
+.add-control-bar .defined-command {
+    color: #000000;
+}
+
+.control-bar:not(.add-control-bar) .defined-command {
+    color: #ffffff;
+}
+
+.adb-command {
+    font-family: 'Inter', sans-serif;
+    font-size: 24pt;
+    font-weight: lighter;
+    color: #000000;
+    flex: 2;
+    margin-left: 20px;
+}
+
+.add-control-bar .adb-command {
+    color: #000000;
+}
+
+.control-bar:not(.add-control-bar) .adb-command {
+    color: #ffffff;
+}
+
+.action-button {
+    font-family: 'Jolly Lodger', cursive;
+    font-size: 36pt;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 15px;
+    transition: opacity 0.3s ease;
+    color: #000000;
+}
+
+.add-control-bar .action-button {
+    color: #000000;
+}
+
+.control-bar:not(.add-control-bar) .action-button {
+    color: #ffffff;
+}
+
+.action-button:hover {
+    opacity: 0.7;
+}
+
+.add-button {
+    margin-left: 20px;
+}
+
+.modify-button {
+    margin-left: 20px;
+}
+
+.debug-button {
+    margin-left: 20px;
+}
+
+/* Inline Input Styles */
+.inline-input {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    background: transparent;
+    border: 2px solid #2a52be;
+    outline: none;
+    padding: 2px 5px;
+    width: 100%;
+    color: inherit;
+}
+
+.defined-command-input {
+    font-family: 'Jolly Lodger', cursive;
+    font-size: 36pt;
+}
+
+.adb-command-input {
+    font-family: 'Inter', sans-serif;
+    font-size: 24pt;
+    font-weight: lighter;
+}
+
+.defined-command,
+.adb-command {
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s ease;
+}
+
+.defined-command:hover,
+.adb-command:hover {
+    opacity: 0.7;
+}
+
+/* CSV Controls */
+.csv-controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.csv-button {
+    font-family: 'Inter', sans-serif;
+    font-size: 14pt;
+    padding: 8px 16px;
+    background-color: #2a52be;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.csv-button:hover {
+    background-color: #1e3d8f;
+}

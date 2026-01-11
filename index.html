@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HexCore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jolly+Lodger&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="site-title">HexCore</h1>
+        </div>
+        <nav class="header-nav">
+            <button class="nav-button" data-section="live-status">Live Status</button>
+            <button class="nav-button" data-section="rule">Rule</button>
+            <button class="nav-button active" data-section="control">Control</button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Live Status Section -->
+        <section id="live-status" class="content-section" style="display: none;">
+            <!-- Live Status content will go here -->
+        </section>
+
+        <!-- Rule Section -->
+        <section id="rule" class="content-section" style="display: none;">
+            <!-- Rule content will go here -->
+        </section>
+
+        <!-- Control Section -->
+        <section id="control" class="content-section">
+            <div class="control-container">
+                <!-- CSV Control Buttons -->
+                <div class="csv-controls">
+                    <button class="csv-button" id="save-csv-btn">Save CSV</button>
+                </div>
+
+                <!-- Add Control Bar -->
+                <div class="control-bar add-control-bar">
+                    <div class="control-bar-content">
+                        <span class="defined-command">Title</span>
+                        <span class="adb-command">command</span>
+                        <button class="action-button add-button">Add</button>
+                        <button class="action-button debug-button">Debug</button>
+                    </div>
+                </div>
+
+                <!-- Control Bars Container -->
+                <div id="control-bars-container">
+                    <!-- Control bars will be added here dynamically -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
