@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 import os
+import subprocess
 
 app = Flask(__name__)
 CSV_FILE = 'controlbar.csv'
@@ -46,6 +47,51 @@ def save_csv():
         
         return jsonify({'success': True, 'message': 'CSV file saved successfully'})
     except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/execute', methods=['POST'])
+def execute_adb():
+    try:
+        data = request.get_json()
+        adb_command = data.get('command', '')
+        
+        if not adb_command:
+            return jsonify({'success': False, 'error': 'ADB command is required'}), 400
+        
+        # adb 명령어를 리스트로 분리 (공백 기준)
+        command_parts = adb_command.split()
+        
+        # subprocess로 실행
+        result = subprocess.run(
+            command_parts,
+            capture_output=True,
+            text=True,
+            timeout=30  # 30초 타임아웃
+        )
+        
+        output = result.stdout if result.stdout else result.stderr
+        
+        if result.returncode == 0:
+            print(f"ADB 명령어 실행 성공: {adb_command}")
+            print(f"출력: {output}")
+            return jsonify({
+                'success': True,
+                'message': 'ADB 명령어가 성공적으로 실행되었습니다.',
+                'output': output
+            })
+        else:
+            print(f"ADB 명령어 실행 실패: {adb_command}")
+            print(f"에러: {output}")
+            return jsonify({
+                'success': False,
+                'error': f'ADB 명령어 실행 실패: {output}',
+                'output': output
+            }), 400
+            
+    except subprocess.TimeoutExpired:
+        return jsonify({'success': False, 'error': '명령어 실행 시간 초과'}), 500
+    except Exception as e:
+        print(f"ADB 명령어 실행 중 오류 발생: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':

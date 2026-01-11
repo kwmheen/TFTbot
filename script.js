@@ -109,10 +109,34 @@ function createControlBar(commandName, adbCommand, saveAfterCreate = true) {
 
     // Add event listeners for Debug button
     const debugBtn = newControlBar.querySelector('.debug-button');
-    debugBtn.addEventListener('click', function() {
+    debugBtn.addEventListener('click', async function() {
         const currentAdbCommand = newControlBar.querySelector('.adb-command').textContent;
-        alert(`테스트 실행: ${currentAdbCommand}`);
-        // 여기에 실제 adb 명령어 실행 로직을 추가할 수 있습니다
+        
+        if (!currentAdbCommand || currentAdbCommand.trim() === '') {
+            alert('adb 명령어가 비어있습니다.');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ command: currentAdbCommand })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(`명령어 실행 성공!\n\n명령어: ${currentAdbCommand}\n\n출력:\n${result.output || '(출력 없음)'}`);
+            } else {
+                alert(`명령어 실행 실패!\n\n명령어: ${currentAdbCommand}\n\n에러: ${result.error || result.output || '알 수 없는 오류'}`);
+            }
+        } catch (error) {
+            console.error('Error executing ADB command:', error);
+            alert(`명령어 실행 중 오류가 발생했습니다: ${error.message}`);
+        }
     });
 
     // Modify button - adb 명령어를 편집 모드로 전환
@@ -219,6 +243,38 @@ document.addEventListener('DOMContentLoaded', function() {
     
     makeEditable(addDefinedCommand, true);
     makeEditable(addAdbCommand, false);
+    
+    // Add Control Bar의 Debug 버튼
+    const addDebugBtn = addControlBar.querySelector('.debug-button');
+    addDebugBtn.addEventListener('click', async function() {
+        const currentAdbCommand = addAdbCommand.textContent.trim();
+        
+        if (!currentAdbCommand || currentAdbCommand === 'command') {
+            alert('adb 명령어를 입력해주세요.');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ command: currentAdbCommand })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(`명령어 실행 성공!\n\n명령어: ${currentAdbCommand}\n\n출력:\n${result.output || '(출력 없음)'}`);
+            } else {
+                alert(`명령어 실행 실패!\n\n명령어: ${currentAdbCommand}\n\n에러: ${result.error || result.output || '알 수 없는 오류'}`);
+            }
+        } catch (error) {
+            console.error('Error executing ADB command:', error);
+            alert(`명령어 실행 중 오류가 발생했습니다: ${error.message}`);
+        }
+    });
 
     // Add Control Bar functionality
     const addButton = document.querySelector('.add-button');
