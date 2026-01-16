@@ -314,4 +314,166 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     loadFromServer();
+    
+    // Live Status 스크린샷 기능
+    let autoCaptureInterval = null;
+    const captureBtn = document.getElementById('capture-btn');
+    const autoCaptureBtn = document.getElementById('auto-capture-btn');
+    const captureIntervalInput = document.getElementById('capture-interval');
+    const deleteAllBtn = document.getElementById('delete-all-btn');
+    const screenshotImg = document.getElementById('screenshot-img');
+    const screenshotPlaceholder = document.getElementById('screenshot-placeholder');
+    
+    // 수동 캡쳐
+    if (captureBtn) {
+        captureBtn.addEventListener('click', async function() {
+            await captureScreenshot();
+        });
+    }
+    
+    // 자동 캡쳐 토글
+    if (autoCaptureBtn) {
+        autoCaptureBtn.addEventListener('click', function() {
+            if (autoCaptureInterval) {
+                // 자동 캡쳐 중지
+                clearInterval(autoCaptureInterval);
+                autoCaptureInterval = null;
+                autoCaptureBtn.textContent = 'Auto Capture';
+                autoCaptureBtn.classList.remove('active');
+                if (captureIntervalInput) {
+                    captureIntervalInput.disabled = false;
+                }
+            } else {
+                // 주기 값 가져오기 (최소 1초)
+                let intervalSeconds = 5;
+                if (captureIntervalInput) {
+                    intervalSeconds = Math.max(1, parseInt(captureIntervalInput.value) || 1);
+                    captureIntervalInput.value = intervalSeconds;
+                    captureIntervalInput.disabled = true;
+                }
+                
+                // 자동 캡쳐 시작
+                autoCaptureInterval = setInterval(async () => {
+                    await captureScreenshot();
+                }, intervalSeconds * 1000);
+                autoCaptureBtn.textContent = 'Stop Auto Capture';
+                autoCaptureBtn.classList.add('active');
+            }
+        });
+    }
+    
+    // Delete All Capture 버튼
+    if (deleteAllBtn) {
+        deleteAllBtn.addEventListener('click', async function() {
+            if (confirm('모든 캡쳐 파일을 삭제하시겠습니까?')) {
+                await deleteAllCaptures();
+            }
+        });
+    }
+    
+    // 스크린샷 캡쳐 함수
+    async function captureScreenshot() {
+        try {
+            const response = await fetch('/api/screenshot', {
+                method: 'POST'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // 캡쳐 성공 시 이미지 업데이트
+                updateScreenshot(result.url);
+            } else {
+                console.error('스크린샷 캡쳐 실패:', result.error);
+                alert('스크린샷 캡쳐에 실패했습니다: ' + result.error);
+            }
+        } catch (error) {
+            console.error('스크린샷 캡쳐 중 오류:', error);
+            alert('스크린샷 캡쳐 중 오류가 발생했습니다: ' + error.message);
+        }
+    }
+    
+    // 스크린샷 이미지 업데이트
+    function updateScreenshot(url) {
+        if (screenshotImg && screenshotPlaceholder) {
+            screenshotImg.src = url + '?t=' + Date.now(); // 캐시 방지
+            screenshotImg.style.display = 'block';
+            screenshotPlaceholder.style.display = 'none';
+        }
+    }
+    
+    // Live Status 섹션이 활성화될 때 마지막 스크린샷 로드
+    const liveStatusSection = document.getElementById('live-status');
+    if (liveStatusSection) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    const isVisible = liveStatusSection.style.display !== 'none';
+                    if (isVisible) {
+                        loadLastScreenshot();
+                    } else {
+                        // 섹션이 숨겨질 때 자동 캡쳐 중지
+                        if (autoCaptureInterval) {
+                            clearInterval(autoCaptureInterval);
+                            autoCaptureInterval = null;
+                            if (autoCaptureBtn) {
+                                autoCaptureBtn.textContent = 'Auto Capture';
+                                autoCaptureBtn.classList.remove('active');
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        
+        observer.observe(liveStatusSection, {
+            attributes: true,
+            attributeFilter: ['style']
+        });
+    }
+    
+    // 마지막 스크린샷 로드
+    async function loadLastScreenshot() {
+        try {
+            const response = await fetch('/api/last-screenshot');
+            const result = await response.json();
+            
+            if (result.success) {
+                updateScreenshot(result.url);
+            } else {
+                // 스크린샷이 없으면 플레이스홀더 표시
+                if (screenshotImg && screenshotPlaceholder) {
+                    screenshotImg.style.display = 'none';
+                    screenshotPlaceholder.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error('마지막 스크린샷 로드 중 오류:', error);
+        }
+    }
+    
+    // 모든 캡쳐 삭제
+    async function deleteAllCaptures() {
+        try {
+            const response = await fetch('/api/delete-all-captures', {
+                method: 'POST'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(result.message || `${result.deleted_count}개의 캡쳐 파일이 삭제되었습니다.`);
+                // 이미지 숨기고 플레이스홀더 표시
+                if (screenshotImg && screenshotPlaceholder) {
+                    screenshotImg.style.display = 'none';
+                    screenshotPlaceholder.style.display = 'block';
+                }
+            } else {
+                alert('캡쳐 파일 삭제에 실패했습니다: ' + result.error);
+            }
+        } catch (error) {
+            console.error('캡쳐 파일 삭제 중 오류:', error);
+            alert('캡쳐 파일 삭제 중 오류가 발생했습니다: ' + error.message);
+        }
+    }
 });

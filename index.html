@@ -26,7 +26,23 @@
     <main class="main-content">
         <!-- Live Status Section -->
         <section id="live-status" class="content-section" style="display: none;">
-            <!-- Live Status content will go here -->
+            <div class="live-status-container">
+                <div class="screenshot-controls">
+                    <button class="screenshot-button" id="capture-btn">Capture Screenshot</button>
+                    <div class="auto-capture-controls">
+                        <label for="capture-interval" class="interval-label">Interval (seconds):</label>
+                        <input type="number" id="capture-interval" class="interval-input" min="1" value="5" step="1">
+                        <button class="screenshot-button" id="auto-capture-btn">Auto Capture</button>
+                    </div>
+                    <button class="screenshot-button delete-button" id="delete-all-btn">Delete All Capture</button>
+                </div>
+                <div class="screenshot-display">
+                    <img id="screenshot-img" src="" alt="Screenshot" style="display: none;">
+                    <div id="screenshot-placeholder" class="screenshot-placeholder">
+                        스크린샷이 없습니다. Capture 버튼을 눌러주세요.
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Rule Section -->
