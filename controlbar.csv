@@ -1,2 +1,8 @@
 정의된 명령어,adb 명령어
-Test,adb shell input tap 1200 2400
+MiddleTap,adb shell input tap 540 1200
+ClickStore,adb shell input swipe 2160 1010 2160 1010 300
+Buy1Champ,adb shell input swipe 800 270 800 270 200 300
+Buy2Champ,adb shell input swipe 1100 270 1100 270 200 300
+Buy3Champ,adb shell input swipe 1400 270 1400 270 200 300
+Buy4Champ,adb shell input swipe 1800 270 1800 270 200 300
+Buy5Champ,adb shell input swipe 2000 270 2000 270 200 300
